@@ -9,11 +9,11 @@
 </div>
 
 
-* 180+ aerial videos from different sources.
+* 190+ aerial videos from different sources.
 * 40+ locales for OSD
 * Source type selection (FullHD/4k SDR or Dolby Vision)
-* Requires root and [Homebrew channel](https://github.com/webosbrew/webos-homebrew-channel) 
-* Compatible with webOS 5 (2020), webOS 6 (2021), webOS 22 (2022), webOS 23 (2023) 
+* Requires root and Homebrew channel
+* Compatible with webOS 5 (2020), webOS 6 (2021), webOS 22 (2022), webOS 23 (2023)
 
 Disclaimer
 ---------------
@@ -33,8 +33,7 @@ GitHub releases to the right. You are on your own here.
 
 Donate
 ------------
-Looking for more sources or cool new features? Any support would mean the world!
-* [Boosty](https://boosty.to/aabytt)
+Looking for more sources or cool new features? Your support would mean the world!
 * [YooMoney](https://yoomoney.ru/to/4100115685800097)
 
 Screenshots
