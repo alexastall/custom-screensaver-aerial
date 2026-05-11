@@ -2841,6 +2841,226 @@
             "previewImage": "assets/tn/video_inspire_california_catalina_00005.webp"
         },
         {
+            "source":"Jetson Creative",
+            "id": "video_i3_ca_los-angeles_dtla_20251216_003",
+            "localizedNameKey": "video_i3_ca_los-angeles_dtla_20251216_003",
+            "pointsOfInterest": {
+                "0": "video_i3_ca_los-angeles_dtla_20251216_003_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_ca_los-angeles_dtla_20251216_003.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_ca_los-angeles_dtla_20251216_003.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_ca_los-angeles_dtla_20251216_003.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_ca_tiburon_20250502_030",
+            "localizedNameKey": "video_i3_ca_tiburon_20250502_030",
+            "pointsOfInterest": {
+                "0": "video_i3_ca_tiburon_20250502_030_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_ca_tiburon_20250502_030.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_ca_tiburon_20250502_030.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_ca_tiburon_20250502_030.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_fr_poussay_03_03",
+            "localizedNameKey": "video_i3_fr_poussay_03_03",
+            "pointsOfInterest": {
+                "0": "video_i3_fr_poussay_03_03_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_fr_poussay_03_03.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_fr_poussay_03_03.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_fr_poussay_03_03.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_in_jodhpur_gulabsagar_jaswantthada_20241128_010_013",
+            "localizedNameKey": "video_i3_in_jodhpur_gulabsagar_jaswantthada_20241128_010_013",
+            "pointsOfInterest": {
+                "0": "video_i3_in_jodhpur_gulabsagar_jaswantthada_20241128_010_013_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_in_jodhpur_gulabsagar_jaswantthada_20241128_010_013.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_in_jodhpur_gulabsagar_jaswantthada_20241128_010_013.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_in_jodhpur_gulabsagar_jaswantthada_20241128_010_013.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_is_westfjords_20240616_004",
+            "localizedNameKey": "video_i3_is_westfjords_20240616_004",
+            "pointsOfInterest": {
+                "0": "video_i3_is_westfjords_20240616_004_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_is_westfjords_20240616_004.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_is_westfjords_20240616_004.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_is_westfjords_20240616_004.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_la_lake-martin_20251019_029",
+            "localizedNameKey": "video_i3_la_lake-martin_20251019_029",
+            "pointsOfInterest": {
+                "0": "video_i3_la_lake-martin_20251019_029_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_la_lake-martin_20251019_029.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_la_lake-martin_20251019_029.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_la_lake-martin_20251019_029.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_nm_shiprock_20251025_010",
+            "localizedNameKey": "video_i3_nm_shiprock_20251025_010",
+            "pointsOfInterest": {
+                "0": "video_i3_nm_shiprock_20251025_010_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_nm_shiprock_20251025_010.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_nm_shiprock_20251025_010.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_nm_shiprock_20251025_010.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_nyc_brooklyn_bed-stuy_20250919_086",
+            "localizedNameKey": "video_i3_nyc_brooklyn_bed-stuy_20250919_086",
+            "pointsOfInterest": {
+                "0": "video_i3_nyc_brooklyn_bed-stuy_20250919_086_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_nyc_brooklyn_bed-stuy_20250919_086.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_nyc_brooklyn_bed-stuy_20250919_086.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_nyc_brooklyn_bed-stuy_20250919_086.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_nyc_manhattan_20250918_067",
+            "localizedNameKey": "video_i3_nyc_manhattan_20250918_067",
+            "pointsOfInterest": {
+                "0": "video_i3_nyc_manhattan_20250918_067_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_nyc_manhattan_20250918_067.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_nyc_manhattan_20250918_067.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_nyc_manhattan_20250918_067.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_or_gardiner_20250430_011",
+            "localizedNameKey": "video_i3_or_gardiner_20250430_011",
+            "pointsOfInterest": {
+                "0": "video_i3_or_gardiner_20250430_011_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_or_gardiner_20250430_011.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_or_gardiner_20250430_011.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_or_gardiner_20250430_011.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_or_oregon-dunes_20250429_004",
+            "localizedNameKey": "video_i3_or_oregon-dunes_20250429_004",
+            "pointsOfInterest": {
+                "0": "video_i3_or_oregon-dunes_20250429_004_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_or_oregon-dunes_20250429_004.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_or_oregon-dunes_20250429_004.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_or_oregon-dunes_20250429_004.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_tx_houston_johnson-space-center_20251020_003",
+            "localizedNameKey": "video_i3_tx_houston_johnson-space-center_20251020_003",
+            "pointsOfInterest": {
+                "0": "video_i3_tx_houston_johnson-space-center_20251020_003_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_tx_houston_johnson-space-center_20251020_003.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_tx_houston_johnson-space-center_20251020_003.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_tx_houston_johnson-space-center_20251020_003.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_uk_staithes_20240628_003",
+            "localizedNameKey": "video_i3_uk_staithes_20240628_003",
+            "pointsOfInterest": {
+                "0": "video_i3_uk_staithes_20240628_003_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_uk_staithes_20240628_003.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_uk_staithes_20240628_003.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_uk_staithes_20240628_003.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_uk_whitby_20240628_005",
+            "localizedNameKey": "video_i3_uk_whitby_20240628_005",
+            "pointsOfInterest": {
+                "0": "video_i3_uk_whitby_20240628_005_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_uk_whitby_20240628_005.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_uk_whitby_20240628_005.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_uk_whitby_20240628_005.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_uk_yorkshire_20240623_021",
+            "localizedNameKey": "video_i3_uk_yorkshire_20240623_021",
+            "pointsOfInterest": {
+                "0": "video_i3_uk_yorkshire_20240623_021_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_uk_yorkshire_20240623_021.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_uk_yorkshire_20240623_021.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_uk_yorkshire_20240623_021.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_i3_wa_elwaha-river_20250427_001",
+            "localizedNameKey": "video_i3_wa_elwaha-river_20250427_001",
+            "pointsOfInterest": {
+                "0": "video_i3_wa_elwaha-river_20250427_001_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_i3_wa_elwaha-river_20250427_001.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_i3_wa_elwaha-river_20250427_001.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_i3_wa_elwaha-river_20250427_001.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_m3_ch_davos_20250712_009",
+            "localizedNameKey": "video_m3_ch_davos_20250712_009",
+            "pointsOfInterest": {
+                "0": "video_m3_ch_davos_20250712_009_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_m3_ch_davos_20250712_009.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_m3_ch_davos_20250712_009.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_m3_ch_davos_20250712_009.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_m3_ch_quarten_20250712_003",
+            "localizedNameKey": "video_m3_ch_quarten_20250712_003",
+            "pointsOfInterest": {
+                "0": "video_m3_ch_quarten_20250712_003_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_m3_ch_quarten_20250712_003.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_m3_ch_quarten_20250712_003.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_m3_ch_quarten_20250712_003.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_m3_ch_zurich_20250712_013",
+            "localizedNameKey": "video_m3_ch_zurich_20250712_013",
+            "pointsOfInterest": {
+                "0": "video_m3_ch_zurich_20250712_013_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_m3_ch_zurich_20250712_013.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_m3_ch_zurich_20250712_013.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_m3_ch_zurich_20250712_013.4k-sdr.webp"
+        },
+        {
+            "source":"Jetson Creative",
+            "id": "video_m3_it_bolzano_20250717_013",
+            "localizedNameKey": "video_m3_it_bolzano_20250717_013",
+            "pointsOfInterest": {
+                "0": "video_m3_it_bolzano_20250717_013_0"
+            },
+            "url-4K-SDR": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr/video_m3_it_bolzano_20250717_013.4k-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/community2026-4k-sdr-240fps/video_m3_it_bolzano_20250717_013.4k-sdr-240fps.mov",            
+            "previewImage": "assets/tn/video_m3_it_bolzano_20250717_013.4k-sdr.webp"
+        },
+        {
             "source":"Robin Fourcade",
             "id": "robinfrcd_capmechant_202304",
             "localizedNameKey": "robinfrcd_capmechant_202304",
