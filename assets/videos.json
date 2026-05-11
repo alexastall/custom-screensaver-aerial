@@ -2591,6 +2591,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_florida_miami_brickell_sunset_00036.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_florida_miami_brickell_sunset_00036.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_florida_miami_brickell_sunset_00036.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_florida_miami_brickell_sunset_00036.4k-sdr-240fps.mov",            
             "previewImage": "assets/tn/video_inspire_florida_miami_brickell_sunset_00036.webp"
         },
         {
@@ -2603,6 +2604,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_nevada_lasvegas_northstrip_021.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_nevada_lasvegas_northstrip_021.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_nevada_lasvegas_northstrip_021.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_nevada_lasvegas_northstrip_021.4k-sdr-240fps.mov",
             "previewImage": "assets/tn/video_inspire_nevada_lasvegas_northstrip_021.webp"
         },
         {
@@ -2615,6 +2617,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_oregon_lone-ranch-beach_00015.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_oregon_lone-ranch-beach_00015.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_oregon_lone-ranch-beach_00015.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_oregon_lone-ranch-beach_00015.4k-sdr-240fps.mov",
             "previewImage": "assets/tn/video_inspire_oregon_lone-ranch-beach_00015.webp"
         },
         {
@@ -2627,6 +2630,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_oregon_lone-ranch-beach_00001.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_oregon_lone-ranch-beach_00001.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_oregon_lone-ranch-beach_00001.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_oregon_lone-ranch-beach_00001.4k-sdr-240fps.mov",
             "previewImage": "assets/tn/video_inspire_oregon_lone-ranch-beach_00001.webp"
         },
         {
@@ -2639,6 +2643,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_california_vineyard_sierra-mar_sunrise_110.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_california_vineyard_sierra-mar_sunrise_110.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_california_vineyard_sierra-mar_sunrise_110.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_california_vineyard_sierra-mar_sunrise_110.4k-sdr-240fps.mov",              
             "previewImage": "assets/tn/video_inspire_california_vineyard_sierra-mar_sunrise_110.webp"
         },
         {
@@ -2651,6 +2656,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_italy_como_cerano-dintelvi_006.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_italy_como_cerano-dintelvi_006.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_italy_como_cerano-dintelvi_006.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_italy_como_cerano-dintelvi_006.4k-sdr-240fps.mov",
             "previewImage": "assets/tn/video_inspire_italy_como_cerano-dintelvi_006.webp"
         },
         {
@@ -2675,6 +2681,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_california_big-sur_2020_00001.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_california_big-sur_2020_00001.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_california_big-sur_2020_00001.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_california_big-sur_2020_00001.4k-sdr-240fps.mov",                        
             "previewImage": "assets/tn/video_inspire_california_big-sur_2020_00001.webp"
         },
         {
@@ -2687,6 +2694,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_california_catalina_avalon_00053.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_california_catalina_avalon_00053.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_california_catalina_avalon_00053.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_california_catalina_avalon_00053.4k-sdr-240fps.mov",                                    
             "previewImage": "assets/tn/video_inspire_california_catalina_avalon_00053.webp"
         },
         {
@@ -2699,6 +2707,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_uk_london_hampstead-heath_003.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_uk_london_hampstead-heath_003.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_uk_london_hampstead-heath_003.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_uk_london_hampstead-heath_016.4k-sdr-240fps.mov",
             "previewImage": "assets/tn/video_inspire_uk_london_hampstead-heath_003.webp"
         },
         {
@@ -2711,6 +2720,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_texas_pecos_foggy-landscape_00018.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_texas_pecos_foggy-landscape_00018.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_texas_pecos_foggy-landscape_00018.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_texas_pecos_foggy-landscape_00018.4k-sdr-240fps.mov",
             "previewImage": "assets/tn/video_inspire_texas_pecos_foggy-landscape_00018.webp"
         },
         {
@@ -2723,6 +2733,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_sanfrancisco_castro_005.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_sanfrancisco_castro_005.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_sanfrancisco_castro_005.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_sanfrancisco_castro_005.4k-sdr-240fps.mov",            
             "previewImage": "assets/tn/video_inspire_sanfrancisco_castro_005.webp"
         },
         {
@@ -2735,6 +2746,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_california_big-sur_landscape_054.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_california_big-sur_landscape_054.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_california_big-sur_landscape_054.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_california_big-sur_landscape_054.4k-sdr-240fps.mov",            
             "previewImage": "assets/tn/video_inspire_california_big-sur_landscape_054.webp"
         },
         {
@@ -2747,6 +2759,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_alabama_montgomery_countryside_00007.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_alabama_montgomery_countryside_00007.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_alabama_montgomery_countryside_00007.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_alabama_montgomery_countryside_00007.4k-sdr-240fps.mov",            
             "previewImage": "assets/tn/video_inspire_alabama_montgomery_countryside_00007.webp"
         },
         {
@@ -2759,6 +2772,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_california_big-sur_bixby_005.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_california_big-sur_bixby_005.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_california_big-sur_bixby_005.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_california_big-sur_bixby_005.4k-sdr-240fps.mov",    
             "previewImage": "assets/tn/video_inspire_california_big-sur_bixby_005.webp"
         },
         {
@@ -2771,6 +2785,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_california_santa-barbara_050.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_california_santa-barbara_050.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_california_santa-barbara_050.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_california_santa-barbara_050.4k-sdr-240fps.mov",  
             "previewImage": "assets/tn/video_inspire_california_santa-barbara_050.webp"
         },
         {
@@ -2783,6 +2798,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_oregon_lone-ranch-beach_00021.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_oregon_lone-ranch-beach_00021.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_oregon_lone-ranch-beach_00021.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_oregon_lone-ranch-beach_00021.4k-sdr-240fps.mov",  
             "previewImage": "assets/tn/video_inspire_oregon_lone-ranch-beach_00021.webp"
         },
         {
@@ -2795,6 +2811,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_uk_edinburgh_arthursseat_010.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_uk_edinburgh_arthursseat_010.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_uk_edinburgh_arthursseat_010.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_uk_edinburgh_arthursseat_010.4k-sdr-240fps.mov",  
             "previewImage": "assets/tn/video_inspire_uk_edinburgh_arthursseat_010.webp"
         },
         {
@@ -2807,6 +2824,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_texas_austin_oct2019_evening_00085.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_texas_austin_oct2019_evening_00085.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_texas_austin_oct2019_evening_00085.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_texas_austin_oct2019_evening_00085.4k-sdr-240fps.mov",  
             "previewImage": "assets/tn/video_inspire_texas_austin_oct2019_evening_00085.webp"
         },
         {
@@ -2819,6 +2837,7 @@
             "url-4K-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-4k-sdr/video_inspire_california_catalina_00005.4k-sdr.mov",
             "url-1080-H264": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-h264/video_inspire_california_catalina_00005.1080-h264.mov",
             "url-1080-SDR": "https://github.com/glouel/AerialCommunity/releases/download/mw2-1080p-sdr/video_inspire_california_catalina_00005.1080-sdr.mov",
+            "url-4K-SDR-240FPS": "https://github.com/AerialScreensaver/AerialCommunity/releases/download/mw2-4k-sdr-240fps/video_inspire_california_catalina_00005.4k-sdr-240fps.mov",            
             "previewImage": "assets/tn/video_inspire_california_catalina_00005.webp"
         },
         {
