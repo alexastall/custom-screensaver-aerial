@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.15] - 2026-07-19
+
+### Changed
+- Default source type is **4k Dolby Vision (HEVC)** (`url-4K-HDR`) for sets that support it.
+
 ## [1.0.14] - 2026-07-19
 
 ### Fixed

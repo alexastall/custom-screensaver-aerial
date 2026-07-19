@@ -36,11 +36,11 @@ GitHub releases to the right. You are on your own here.
 
 Tested on LG 65UM7400PLB (webOS 4.10, ~1.5 GB RAM). Upstream targets webOS 5+.
 
-Recommended settings on webOS 4:
+Recommended settings on webOS 4 (this set):
 
-1. Source video type: **FullHD (H264)** (default in this fork from 1.0.13)
+1. Source video type: **4k Dolby Vision (HEVC)** (default from 1.0.15) — fall back to FullHD H.264 if streams fail
 2. Enable **Autostart** (or Temporary Apply after each reboot)
-3. Use **Test run (apply + launch)** to verify
+3. Use **Test run (apply + launch)** to verify; leave active HDMI inputs when testing
 
 Why Test failed on older builds before 1.0.13:
 

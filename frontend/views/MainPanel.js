@@ -35,12 +35,11 @@ module.exports = kind({
               {kind: BodyText, style: 'margin: 10px 0', content: 'This will only enable custom screensaver until a reboot'},
             ], ontap: "temporaryApply"},
             {kind: ExpandablePicker, name: "source", content: 'Source video type', selectedIndex: settings.sourceTypeIndex,  onChange: 'selectSource', components: [
-			  // Prefer H.264 first: most compatible on webOS 4.x / low-RAM sets
-			  {content: 'FullHD (H264) — recommended on webOS 4', value: 'url-1080-H264'},
+			  {content: 'FullHD (H264)', value: 'url-1080-H264'},
 			  {content: 'FullHD (H265)', value: 'url-1080-SDR'},
 			  {content: 'FullHD Dolby Vision (HEVC)', value: 'url-1080-HDR'},
 			  {content: '4k (HEVC)', value: 'url-4K-SDR'},
-			  {content: '4k Dolby Vision (HEVC)', value: 'url-4K-HDR'},
+			  {content: '4k Dolby Vision (HEVC) — default', value: 'url-4K-HDR'},
 			  {content: '4k 240FPS (HEVC) - unlikely working in webOS', value: 'url-4K-SDR-240FPS'}	  
             ]},
             {kind: ToggleItem, name: "playLowerQuality", content: 'Fall back to lower quality if preferred source missing', checked: settings.playLowerQuality, onchange: 'playLowerQualityToggle'},		  
@@ -129,8 +128,8 @@ module.exports = kind({
       settings = {
         localeLang: 'en-GB',
         localeLangIndex: 8,
-        sourceType: 'url-1080-H264',
-        sourceTypeIndex: 0,
+        sourceType: 'url-4K-HDR',
+        sourceTypeIndex: 4,
         osdOpacity: 60,
         debug: false,
         playLowerQuality: true
