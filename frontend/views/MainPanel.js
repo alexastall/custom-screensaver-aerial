@@ -150,15 +150,12 @@ module.exports = kind({
     this.$.playLowerQuality.set('checked', settings.playLowerQuality);	  
   },
 	
-  // Always apply aerial QML first, then trigger screensaver. On some webOS
-  // builds turnOnScreenSaver alone is not enough, so also launch the app.
-  // Close this config card shortly after so it does not sit in the stack and
-  // steal display-window ownership from the hardware video plane.
+  // Apply bind-mount, then use the *system* screensaver path only.
+  // Do NOT applicationManager/launch the screensaver as a card — on webOS 4
+  // that leaves the media pipeline / tvpower stuck (dead power button, crashes).
   testRun: function (command) {
     var cmd = applyPath +
-      " && luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'" +
-      " ; luna-send -n 1 'luna://com.webos.applicationManager/launch' '{\"id\":\"com.webos.app.screensaver\"}'" +
-      " ; sleep 1; luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"org.aabytt.webos.custom-screensaver-aerial\"}'";
+      " && luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'";
     this.exec(cmd);
   },
 

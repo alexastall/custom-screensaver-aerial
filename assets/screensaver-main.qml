@@ -4,21 +4,16 @@
  * Usage:
  *   mount --bind ./screensaver-main.qml /usr/palm/applications/com.webos.app.screensaver/qml/main.qml
  *
- * Test launch:
+ * Test launch (only this path — do not applicationManager/launch as a card):
  *   luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'
- *   luna-send -n 1 'luna://com.webos.applicationManager/launch' '{"id":"com.webos.app.screensaver"}'
  *
  * Display notes (webOS 4.x):
- *  - QtMultimedia video uses the hardware plane under the QML surface.
- *  - Eos.Items PunchThrough should cut a hole so the plane is visible, but on
- *    some webOS 4 builds setWindowPunchThroughRectFunc is never registered,
- *    so PunchThrough is a no-op and a solid black window hides the video.
- *  - Mitigation: transparent window + Video opacity 0 (no black fade overlay).
- *  - Use CARD window type on webOS 4 so ACB/display attach correctly; pure
- *    SCREENSAVER type can leave a black surface over the HW plane.
- *  - Active HDMI inputs (e.g. Roku on HDMI2) compete for the video plane and
- *    can yield black aerials with a moving debug timecode — leave Live TV /
- *    external inputs when testing.
+ *  - MUST use _WEBOS_WINDOW_TYPE_SCREENSAVER so tvpower / remote power and
+ *    idle lifecycle work. CARD type can leave the TV with a stuck media
+ *    pipeline (power button dead, app launches crash until reboot).
+ *  - PunchThrough is often a no-op (setWindowPunchThroughRectFunc missing).
+ *    Use transparent window + Video opacity 0 so the HW plane can show.
+ *  - Active HDMI (e.g. Roku) can own the video plane — leave that input when testing.
  */
 import QtQuick 2.4
 import QtMultimedia 5.6
@@ -33,9 +28,8 @@ WebOSWindow {
     id : window
     width : 1920
     height : 1080
-    // CARD: reliable HW-plane attach on webOS 4.x (see notes above)
-    windowType : "_WEBOS_WINDOW_TYPE_CARD"
-    // Transparent so hardware video plane can show when punch-through is broken
+    windowType : "_WEBOS_WINDOW_TYPE_SCREENSAVER"
+    // Transparent when punch-through is broken (webOS 4)
     color : "transparent"
     appId : "com.webos.app.screensaver"
     visible : true
@@ -52,6 +46,15 @@ WebOSWindow {
     Component.onCompleted : {
         init()
         notificationsService.set('disable')
+    }
+
+    Component.onDestruction : {
+        // Release HW decoder / ACB so power and other apps keep working
+        try {
+            videoOutput.stop()
+            videoOutput.source = ""
+        } catch (e) {}
+        notificationsService.set('enable')
     }
 
     I.ILib {
@@ -75,8 +78,7 @@ WebOSWindow {
         }
     }
 
-    // Punch-through as a window sibling (not nested under Video). Best-effort on
-    // webOS 5+; often a no-op on webOS 4 (setWindowPunchThroughRectFunc missing).
+    // Best-effort on webOS 5+; often no-op on webOS 4
     PunchThrough {
         id : punchThroughArea
         x : 0
@@ -85,22 +87,14 @@ WebOSWindow {
         width : parent.width
         height : parent.height - 1
         visible : true
-        Component.onCompleted : {
-            // Some builds expose setRegion; ignore if missing.
-            try {
-                if (typeof setRegion === "function")
-                    setRegion(Qt.rect(0, 0, width, height))
-            } catch (e) {}
-        }
     }
 
     Video {
         id : videoOutput
-        // Hardware-plane video: QML item itself must not paint an opaque frame.
-        // Keep nearly full-screen but 1px short so webOS does not auto-dismiss.
+        // HW-plane output: do not paint an opaque QML frame over it
         fillMode : VideoOutput.PreserveAspectCrop
         width : parent.width
-        height : parent.height - 1
+        height : parent.height - 1 // non-fullscreen so system does not auto-kill screensaver
         x : 0
         y : 0
         z : 0
@@ -112,23 +106,15 @@ WebOSWindow {
             osd.visible = false
         }
         onPaused : {
-            playRandomVideo()
+            // User activity / system pause — pick next clip only if still resourcesReady
+            if (resourcesReady)
+                playRandomVideo()
             osd.visible = false
         }
         onPlaying : {
             fadeInOsd.running = true
             osd.visible = true
         }
-    }
-
-    // Soft scrim only for OSD readability; keep very light so video remains visible.
-    Rectangle {
-        id : scrim
-        anchors.fill : parent
-        z : 1
-        color : "black"
-        opacity : 0.0
-        visible : false
     }
 
     Rectangle {
@@ -363,8 +349,7 @@ WebOSWindow {
         "\n Error: " + videoOutput.error + " " + videoOutput.errorString +
         "\n Playback State: " + playbackState +
         "\n Buffer Progress : " + (
-        videoOutput.bufferProgress * 33.334).toFixed(0) + "%" +
-        "\n Display: transparent window + HW plane"
+        videoOutput.bufferProgress * 33.334).toFixed(0) + "%"
     }
     function updateOSD() {
         if (!settings || !poi || !playList)

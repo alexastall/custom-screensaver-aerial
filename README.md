@@ -55,8 +55,14 @@ Why Test failed on older builds before 1.0.13:
 plane, but something is covering it or another input owns the plane.
 
 * Leave **HDMI / Live TV** (unplug or switch away from devices like Roku) when testing.
-* This fork uses a transparent window + CARD window type so the plane can show
-  when webOS 4 does not implement QML punch-through.
+* This fork uses a transparent window so the plane can show when webOS 4 does
+  not implement QML punch-through. Window type stays **SCREENSAVER** (required
+  for power/idle); do not launch the screensaver as a normal card app.
+
+**Power button dead / apps crash after Test:** reboot once if already stuck.
+From 1.0.16 Test only uses the system `turnOnScreenSaver` path. Also turn off
+**demo mode** if enabled (Settings / store-demo), and ensure **Autostart** is on
+so the bind survives reboot.
 
 Build
 -----

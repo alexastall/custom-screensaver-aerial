@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.16] - 2026-07-19
+
+### Fixed
+- **Restore `_WEBOS_WINDOW_TYPE_SCREENSAVER`** — CARD window type broke system
+  screensaver idle activation and left tvpower/media stuck after Test (power
+  button unresponsive, app launches crash until reboot).
+- **Safer Test run** — only `apply.sh` + `turnOnScreenSaver` (no
+  `applicationManager/launch` of screensaver as a card app).
+- Stop/release video on window destruction to free HW decoder / ACB.
+- `apply.sh` rebinds if an older custom-screensaver mount is active.
+
 ## [1.0.15] - 2026-07-19
 
 ### Changed
