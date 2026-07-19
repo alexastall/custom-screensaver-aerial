@@ -51,6 +51,13 @@ Why Test failed on older builds before 1.0.13:
 
 4K / Dolby Vision / high-bitrate HEVC streams may fail or stall on low-RAM webOS 4 sets. Prefer H.264 FullHD, and keep “fall back to lower quality” enabled.
 
+**Black screen but debug timecode moves:** the stream is playing on the hardware
+plane, but something is covering it or another input owns the plane.
+
+* Leave **HDMI / Live TV** (unplug or switch away from devices like Roku) when testing.
+* This fork uses a transparent window + CARD window type so the plane can show
+  when webOS 4 does not implement QML punch-through.
+
 Build
 -----
 

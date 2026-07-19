@@ -4,15 +4,21 @@
  * Usage:
  *   mount --bind ./screensaver-main.qml /usr/palm/applications/com.webos.app.screensaver/qml/main.qml
  *
- * Test launch (no way to trigger on "No signal" screen)
+ * Test launch:
  *   luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'
- *   # fallback on some webOS builds:
  *   luna-send -n 1 'luna://com.webos.applicationManager/launch' '{"id":"com.webos.app.screensaver"}'
  *
- * Notes for webOS 4.x:
- *  - Prefer url-1080-H264 (Apple AVC) over 4K/HDR HEVC streams
- *  - globalVars may be missing; hardcode screensaver appId for notifications
- *  - Do not call playRandomVideo until settings + playlist + locale are loaded
+ * Display notes (webOS 4.x):
+ *  - QtMultimedia video uses the hardware plane under the QML surface.
+ *  - Eos.Items PunchThrough should cut a hole so the plane is visible, but on
+ *    some webOS 4 builds setWindowPunchThroughRectFunc is never registered,
+ *    so PunchThrough is a no-op and a solid black window hides the video.
+ *  - Mitigation: transparent window + Video opacity 0 (no black fade overlay).
+ *  - Use CARD window type on webOS 4 so ACB/display attach correctly; pure
+ *    SCREENSAVER type can leave a black surface over the HW plane.
+ *  - Active HDMI inputs (e.g. Roku on HDMI2) compete for the video plane and
+ *    can yield black aerials with a moving debug timecode — leave Live TV /
+ *    external inputs when testing.
  */
 import QtQuick 2.4
 import QtMultimedia 5.6
@@ -27,8 +33,10 @@ WebOSWindow {
     id : window
     width : 1920
     height : 1080
-    windowType : "_WEBOS_WINDOW_TYPE_SCREENSAVER"
-    color : "black"
+    // CARD: reliable HW-plane attach on webOS 4.x (see notes above)
+    windowType : "_WEBOS_WINDOW_TYPE_CARD"
+    // Transparent so hardware video plane can show when punch-through is broken
+    color : "transparent"
     appId : "com.webos.app.screensaver"
     visible : true
     property var poi
@@ -40,11 +48,12 @@ WebOSWindow {
     property string sourceAlt
     property bool resourcesReady : false
     property string basePath : "file:///media/developer/apps/usr/palm/applications/org.aabytt.webos.custom-screensaver-aerial/assets/"
+
     Component.onCompleted : {
         init()
         notificationsService.set('disable')
-        // Do not playRandomVideo here — playlist/settings load async via XHR
     }
+
     I.ILib {
         id : ilib
     }
@@ -65,69 +74,69 @@ WebOSWindow {
             updateOSD()
         }
     }
+
+    // Punch-through as a window sibling (not nested under Video). Best-effort on
+    // webOS 5+; often a no-op on webOS 4 (setWindowPunchThroughRectFunc missing).
+    PunchThrough {
+        id : punchThroughArea
+        x : 0
+        y : 0
+        z : -1
+        width : parent.width
+        height : parent.height - 1
+        visible : true
+        Component.onCompleted : {
+            // Some builds expose setRegion; ignore if missing.
+            try {
+                if (typeof setRegion === "function")
+                    setRegion(Qt.rect(0, 0, width, height))
+            } catch (e) {}
+        }
+    }
+
     Video {
         id : videoOutput
+        // Hardware-plane video: QML item itself must not paint an opaque frame.
+        // Keep nearly full-screen but 1px short so webOS does not auto-dismiss.
         fillMode : VideoOutput.PreserveAspectCrop
         width : parent.width
-        height : parent.height - 1 // non fullscreen to avoid screensaver automatic disabling
+        height : parent.height - 1
+        x : 0
+        y : 0
+        z : 0
+        opacity : 0
         source : ""
         visible : true
         autoPlay : true
         onStopped : {
-            punchThroughArea.visible = false
             osd.visible = false
-            fadeOutVideo.running = false
         }
         onPaused : {
-            punchThroughArea.visible = false
             playRandomVideo()
             osd.visible = false
-            fadeOutVideo.running = false
         }
         onPlaying : {
-            punchThroughArea.visible = true
-            fadeInVideo.running = true
             fadeInOsd.running = true
             osd.visible = true
         }
-        PunchThrough {
-            id : punchThroughArea
-            visible : false
-            x : 0
-            y : 0
-            z : -1
-            width : parent.width
-            height : parent.height
-            Rectangle {
-                id : opacityBox
-                width : 1920
-                height : 1080
-                z : 1
-                color : "black"
-                OpacityAnimator {
-                    id : fadeInVideo
-                    target : opacityBox
-                    from : 1
-                    to : 0
-                    duration : 3000
-                    running : false
-                }
-                OpacityAnimator {
-                    id : fadeOutVideo
-                    target : opacityBox
-                    from : 0
-                    to : 1
-                    duration : 5000
-                    running : false
-                }
-            }
-        }
     }
+
+    // Soft scrim only for OSD readability; keep very light so video remains visible.
+    Rectangle {
+        id : scrim
+        anchors.fill : parent
+        z : 1
+        color : "black"
+        opacity : 0.0
+        visible : false
+    }
+
     Rectangle {
         id : osd
         opacity : 0
         visible : true
         color : "transparent"
+        z : 2
         anchors.fill : parent
         anchors.margins : 65
         OpacityAnimator {
@@ -203,16 +212,17 @@ WebOSWindow {
     }
     Text {
         id : debug
+        z : 3
         visible : settings && settings.debug
         horizontalAlignment : Text.AlignRight
         anchors.right : parent.right
         anchors.margins : 25
-        opacity : 0.7
+        opacity : 0.85
         font.family : name.font.family
         font.pixelSize : name.font.pixelSize - 30
-        color : name.color
-        style : name.style
-        styleColor : name.styleColor
+        color : "white"
+        style : Text.Raised
+        styleColor : "black"
         fontSizeMode : name.fontSizeMode
     }
     function init() {
@@ -235,7 +245,6 @@ WebOSWindow {
         if (!settings.playLowerQuality)
             return ""
 
-        // Prefer progressively more compatible fallbacks (important on webOS 4.x)
         var fallbacks = []
         if (preferred.indexOf("4K") >= 0 || preferred.indexOf("HDR") >= 0) {
             fallbacks = ["url-4K-SDR", "url-1080-SDR", "url-1080-H264"]
@@ -257,7 +266,6 @@ WebOSWindow {
         if (!playList || !playList.assets || !playList.assets.length || !settings)
             return
         stalledCounter = 0
-        // Prefer unviewed assets; if all viewed, reset marks
         var attempts = 0
         var maxAttempts = playList.assets.length + 2
         while (attempts < maxAttempts) {
@@ -274,7 +282,6 @@ WebOSWindow {
                 return
             }
         }
-        // All marked viewed or missing URLs — clear viewed flags and try once more
         for (var j = 0; j < playList.assets.length; j++)
             playList.assets[j].viewed = false
         randomIndex = Math.floor(Math.random() * playList.assets.length)
@@ -288,7 +295,6 @@ WebOSWindow {
     function checkError() {
         if (videoOutput.error !== 0) {
             notificationsService.set('enable')
-            punchThroughArea.visible = false
             playRandomVideo()
         }
     }
@@ -301,7 +307,6 @@ WebOSWindow {
             playList.assets[randomIndex].viewed = true
         }
         if (videoOutput.duration > 0 && Math.floor(videoOutput.position / 1000) == Math.floor(videoOutput.duration / 1000) - 5) {
-            fadeOutVideo.running = true
             fadeOutOsd.running = true
         }
         if (videoOutput.status == MediaPlayer.EndOfMedia)
@@ -312,7 +317,6 @@ WebOSWindow {
             var status = 'Loading'
             stalledCounter ++
             if (stalledCounter > 25) {
-                punchThroughArea.visible = false
                 playRandomVideo()
             }
         }
@@ -324,7 +328,6 @@ WebOSWindow {
             var status = 'Stalled'
             stalledCounter ++
             if (stalledCounter > 25) {
-                punchThroughArea.visible = false
                 playRandomVideo()
             }
         }
@@ -345,7 +348,6 @@ WebOSWindow {
             var playbackState = 'stopped'
             stalledCounter ++
             if (stalledCounter > 15) {
-                punchThroughArea.visible = false
                 playRandomVideo()
             }
         }
@@ -361,7 +363,8 @@ WebOSWindow {
         "\n Error: " + videoOutput.error + " " + videoOutput.errorString +
         "\n Playback State: " + playbackState +
         "\n Buffer Progress : " + (
-        videoOutput.bufferProgress * 33.334).toFixed(0) + "%"
+        videoOutput.bufferProgress * 33.334).toFixed(0) + "%" +
+        "\n Display: transparent window + HW plane"
     }
     function updateOSD() {
         if (!settings || !poi || !playList)
@@ -395,7 +398,6 @@ WebOSWindow {
 
     Service {
         id : notificationsService
-        // globalVars is unavailable on some webOS 4.x qml-runner contexts
         appId : "com.webos.app.screensaver"
         function set(param) {
             call("luna://com.webos.notification/", param)

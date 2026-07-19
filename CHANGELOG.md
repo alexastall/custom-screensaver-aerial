@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.14] - 2026-07-19
+
+### Fixed
+- **Black screen with advancing timecode** on webOS 4.x: video decoded but was hidden.
+  - Transparent `WebOSWindow` (no opaque black fill).
+  - Remove black fade overlay over the punch-through region.
+  - Keep `Video` item at opacity 0 (output is on the hardware plane).
+  - Use `_WEBOS_WINDOW_TYPE_CARD` so display/ACB attach correctly when
+    `setWindowPunchThroughRectFunc` is missing.
+- Document that an active HDMI input (e.g. Roku) can steal the video plane and
+  produce the same black-screen-with-timecode symptom.
+
 ## [1.0.13] - 2026-07-19
 
 ### Fixed
