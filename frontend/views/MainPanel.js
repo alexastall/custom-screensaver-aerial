@@ -150,12 +150,15 @@ module.exports = kind({
     this.$.playLowerQuality.set('checked', settings.playLowerQuality);	  
   },
 	
-  // Apply bind-mount, then use the *system* screensaver path only.
-  // Do NOT applicationManager/launch the screensaver as a card — on webOS 4
-  // that leaves the media pipeline / tvpower stuck (dead power button, crashes).
+  // Apply bind-mount, leave Live TV (it NACKs system screensaver and shows LG
+  // stock photo screensaver from inputcommon instead), go Home, then system path.
+  // Never applicationManager/launch screensaver as a card (breaks power/media).
   testRun: function (command) {
     var cmd = applyPath +
-      " && luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'";
+      " && luna-send -n 1 'luna://com.webos.applicationManager/launch' '{\"id\":\"com.webos.app.home\"}'" +
+      " ; luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"com.webos.app.livetv\"}'" +
+      " ; sleep 1" +
+      " ; luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'";
     this.exec(cmd);
   },
 

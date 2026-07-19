@@ -64,6 +64,18 @@ From 1.0.16 Test only uses the system `turnOnScreenSaver` path. Also turn off
 **demo mode** if enabled (Settings / store-demo), and ensure **Autostart** is on
 so the bind survives reboot.
 
+**Stock LG photo/particle screensaver still appears:** LG has *two* systems:
+
+1. **Aerial (this app)** — `com.webos.app.screensaver`, bind-mounted QML. Used when
+   the system calls `turnOnScreenSaver` and foreground apps ACK (e.g. idle on **Home**).
+2. **Live TV / HDMI screensaver** — built into `com.webos.app.inputcommon` (stock
+   photos / “no signal” slideshow). That path never uses our IPK.
+
+If you leave the TV on **Live TV** or an HDMI input, you will get (2), not aerials.
+For aerials: use **Test** (leaves Live TV first), or idle on the **Home** screen.
+**Autostart** only re-applies the bind after reboot; it does not change Live TV’s
+own screensaver.
+
 Build
 -----
 
