@@ -1,7 +1,7 @@
 {
     "id": "org.aabytt.webos.custom-screensaver-aerial",
-    "version": "1.0.12",
-    "vendor": "aabytt",
+    "version": "1.0.13",
+    "vendor": "aabytt / webOS4 fork",
     "title": "WebOS Aerial Screensaver",
     "icon": "assets/icon130.png",
     "largeIcon": "assets/icon130.png",

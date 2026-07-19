@@ -35,14 +35,15 @@ module.exports = kind({
               {kind: BodyText, style: 'margin: 10px 0', content: 'This will only enable custom screensaver until a reboot'},
             ], ontap: "temporaryApply"},
             {kind: ExpandablePicker, name: "source", content: 'Source video type', selectedIndex: settings.sourceTypeIndex,  onChange: 'selectSource', components: [
+			  // Prefer H.264 first: most compatible on webOS 4.x / low-RAM sets
+			  {content: 'FullHD (H264) — recommended on webOS 4', value: 'url-1080-H264'},
 			  {content: 'FullHD (H265)', value: 'url-1080-SDR'},
-			  {content: 'FullHD (H264)', value: 'url-1080-H264'},
 			  {content: 'FullHD Dolby Vision (HEVC)', value: 'url-1080-HDR'},
 			  {content: '4k (HEVC)', value: 'url-4K-SDR'},
 			  {content: '4k Dolby Vision (HEVC)', value: 'url-4K-HDR'},
 			  {content: '4k 240FPS (HEVC) - unlikely working in webOS', value: 'url-4K-SDR-240FPS'}	  
             ]},
-            {kind: ToggleItem, name: "playLowerQuality", content: 'Try SDR source if Dolby Vision video does not exist', checked: settings.playLowerQuality, onchange: 'playLowerQualityToggle'},		  
+            {kind: ToggleItem, name: "playLowerQuality", content: 'Fall back to lower quality if preferred source missing', checked: settings.playLowerQuality, onchange: 'playLowerQualityToggle'},		  
             {kind: ExpandablePicker, name: "language", content: 'On-screen display text language', selectedIndex: settings.localeLangIndex , onChange: 'selectLang',
 			components: [
 				{value:'ar-AE', content:'العربية'},
@@ -93,7 +94,7 @@ module.exports = kind({
 		{kind: SimpleIntegerPicker, name: 'opacityPicker', value: settings.osdOpacity, min: 0, max: 100, step: 5, unit: '', onChange: 'setOpacity' }
             ]},
             {kind: ToggleItem, name: "debug", content: 'Show debug info', checked: settings.debug, onchange: 'debugToggle'},
-            {kind: Button, style: 'margin: 20px 0', content: 'Test run', ontap: "testRun"},			  
+            {kind: Button, style: 'margin: 20px 0', content: 'Test run (apply + launch)', ontap: "testRun"},			  
           ]},
         ]},
       ]},
@@ -121,7 +122,28 @@ module.exports = kind({
 	
   onInit: function (sender, evt) {
     console.info(sender, evt);
-    settings = JSON.parse(evt.stdoutString);
+    try {
+      settings = JSON.parse(evt.stdoutString);
+    } catch (e) {
+      console.error('Failed to parse settings.json', e);
+      settings = {
+        localeLang: 'en-GB',
+        localeLangIndex: 8,
+        sourceType: 'url-1080-H264',
+        sourceTypeIndex: 0,
+        osdOpacity: 60,
+        debug: false,
+        playLowerQuality: true
+      };
+    }
+    // Migrate legacy sourceTypeIndex after picker order change (H264 moved to index 0)
+    if (settings.sourceType) {
+      var sourceValues = ['url-1080-H264', 'url-1080-SDR', 'url-1080-HDR', 'url-4K-SDR', 'url-4K-HDR', 'url-4K-SDR-240FPS'];
+      var idx = sourceValues.indexOf(settings.sourceType);
+      if (idx >= 0) {
+        settings.sourceTypeIndex = idx;
+      }
+    }
     this.$.language.set('selectedIndex', settings.localeLangIndex);
     this.$.source.set('selectedIndex', settings.sourceTypeIndex);
     this.$.opacityPicker.set('value', settings.osdOpacity);
@@ -129,8 +151,13 @@ module.exports = kind({
     this.$.playLowerQuality.set('checked', settings.playLowerQuality);	  
   },
 	
+  // Always apply aerial QML first, then trigger screensaver. On some webOS
+  // builds turnOnScreenSaver alone is not enough, so also launch the app.
   testRun: function (command) {
-    this.exec("luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'");
+    var cmd = applyPath +
+      " && luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'" +
+      " ; luna-send -n 1 'luna://com.webos.applicationManager/launch' '{\"id\":\"com.webos.app.screensaver\"}'";
+    this.exec(cmd);
   },
 
   temporaryApply: function (command) {

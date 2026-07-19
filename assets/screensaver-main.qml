@@ -6,6 +6,13 @@
  *
  * Test launch (no way to trigger on "No signal" screen)
  *   luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'
+ *   # fallback on some webOS builds:
+ *   luna-send -n 1 'luna://com.webos.applicationManager/launch' '{"id":"com.webos.app.screensaver"}'
+ *
+ * Notes for webOS 4.x:
+ *  - Prefer url-1080-H264 (Apple AVC) over 4K/HDR HEVC streams
+ *  - globalVars may be missing; hardcode screensaver appId for notifications
+ *  - Do not call playRandomVideo until settings + playlist + locale are loaded
  */
 import QtQuick 2.4
 import QtMultimedia 5.6
@@ -31,11 +38,12 @@ WebOSWindow {
     property int randomIndex
     property int stalledCounter : 0
     property string sourceAlt
+    property bool resourcesReady : false
     property string basePath : "file:///media/developer/apps/usr/palm/applications/org.aabytt.webos.custom-screensaver-aerial/assets/"
     Component.onCompleted : {
         init()
         notificationsService.set('disable')
-        playRandomVideo()
+        // Do not playRandomVideo here — playlist/settings load async via XHR
     }
     I.ILib {
         id : ilib
@@ -50,6 +58,8 @@ WebOSWindow {
         running : true
         repeat : true
         onTriggered : {
+            if (!resourcesReady)
+                return
             checkError()
             checkStatus()
             updateOSD()
@@ -138,8 +148,8 @@ WebOSWindow {
         }
         Text {
             id : name
-            opacity : settings.osdOpacity / 100
-            text : poi.strings[playList.assets[randomIndex].localizedNameKey]
+            opacity : (settings && settings.osdOpacity !== undefined) ? settings.osdOpacity / 100 : 0.6
+            text : (resourcesReady && poi && playList) ? (poi.strings[playList.assets[randomIndex].localizedNameKey] || "") : ""
             font.family : segoeUILight.name
             font.letterSpacing : -1
             fontSizeMode : Text.Fit
@@ -152,7 +162,7 @@ WebOSWindow {
         Text {
             id : poiOSD
             opacity : name.opacity
-            text : poi.strings[playList.assets[randomIndex].pointsOfInterest[poiIndex]]
+            text : (resourcesReady && poi && playList) ? (poi.strings[playList.assets[randomIndex].pointsOfInterest[poiIndex]] || "") : ""
             font.family : name.font.family
             font.letterSpacing : name.font.letterSpacing
             fontSizeMode : name.fontSizeMode
@@ -193,7 +203,7 @@ WebOSWindow {
     }
     Text {
         id : debug
-        visible : settings.debug
+        visible : settings && settings.debug
         horizontalAlignment : Text.AlignRight
         anchors.right : parent.right
         anchors.margins : 25
@@ -209,35 +219,70 @@ WebOSWindow {
         loadJSONData(basePath + 'settings.json', 'settings', loadResources)
     }
     function loadResources() {
-        loadJSONData(basePath + 'videos.json', 'playList')
-        loadJSONData(basePath + 'locales/' + settings.localeLang + '.json', 'poi', playRandomVideo)
+        loadJSONData(basePath + 'videos.json', 'playList', function () {
+            loadJSONData(basePath + 'locales/' + settings.localeLang + '.json', 'poi', function () {
+                resourcesReady = true
+                playRandomVideo()
+            })
+        })
+    }
+    function pickSource(asset) {
+        var preferred = settings.sourceType
+        if (asset[preferred]) {
+            sourceAlt = ""
+            return asset[preferred]
+        }
+        if (!settings.playLowerQuality)
+            return ""
+
+        // Prefer progressively more compatible fallbacks (important on webOS 4.x)
+        var fallbacks = []
+        if (preferred.indexOf("4K") >= 0 || preferred.indexOf("HDR") >= 0) {
+            fallbacks = ["url-4K-SDR", "url-1080-SDR", "url-1080-H264"]
+        } else if (preferred === "url-1080-SDR") {
+            fallbacks = ["url-1080-H264"]
+        } else if (preferred === "url-1080-HDR") {
+            fallbacks = ["url-1080-SDR", "url-1080-H264"]
+        }
+
+        for (var i = 0; i < fallbacks.length; i++) {
+            if (fallbacks[i] !== preferred && asset[fallbacks[i]]) {
+                sourceAlt = " - n/a, trying " + fallbacks[i]
+                return asset[fallbacks[i]]
+            }
+        }
+        return ""
     }
     function playRandomVideo() {
+        if (!playList || !playList.assets || !playList.assets.length || !settings)
+            return
         stalledCounter = 0
+        // Prefer unviewed assets; if all viewed, reset marks
+        var attempts = 0
+        var maxAttempts = playList.assets.length + 2
+        while (attempts < maxAttempts) {
+            attempts++
+            randomIndex = Math.floor(Math.random() * playList.assets.length)
+            var asset = playList.assets[randomIndex]
+            if (asset.viewed)
+                continue
+            var url = pickSource(asset)
+            if (url) {
+                notificationsService.set('disable')
+                videoOutput.source = url
+                videoOutput.play()
+                return
+            }
+        }
+        // All marked viewed or missing URLs — clear viewed flags and try once more
+        for (var j = 0; j < playList.assets.length; j++)
+            playList.assets[j].viewed = false
         randomIndex = Math.floor(Math.random() * playList.assets.length)
-        if (!playList.assets[randomIndex].viewed) {
-            if (playList.assets[randomIndex][settings.sourceType]) {
-                sourceAlt = ""
-                videoOutput.source = playList.assets[randomIndex][settings.sourceType]
-                    notificationsService.set('disable')
-                    videoOutput.play()
-            } else if(settings.sourceType == "url-4K-HDR" && settings.playLowerQuality){
-                sourceAlt = " - n/a, trying url-4K-SDR"
-                videoOutput.source = playList.assets[randomIndex]["url-4K-SDR"]
-                    videoOutput.play()
-            } else if(settings.sourceType == "url-1080-HDR" && settings.playLowerQuality){
-                if(playList.assets[randomIndex]["url-1080-SDR"]){
-                    sourceAlt = " - n/a, trying url-1080-SDR"
-                    videoOutput.source = playList.assets[randomIndex]["url-1080-SDR"]
-                    videoOutput.play()
-                } else if(playList.assets[randomIndex]["url-1080-H264"]){
-                    sourceAlt = " - n/a, trying url-1080-H264"
-                    videoOutput.source = playList.assets[randomIndex]["url-1080-H264"]
-                    videoOutput.play()
-                } else playRandomVideo() 
-            } else playRandomVideo() 
-        } else 
-            playRandomVideo()
+        var retryUrl = pickSource(playList.assets[randomIndex])
+        if (retryUrl) {
+            videoOutput.source = retryUrl
+            videoOutput.play()
+        }
     }
 
     function checkError() {
@@ -249,17 +294,19 @@ WebOSWindow {
     }
 
     function checkStatus() {
+        if (!playList || !settings)
+            return
         if (videoOutput.position > 2000) {
             notificationsService.set('enable')
             playList.assets[randomIndex].viewed = true
         }
-        if (Math.floor(videoOutput.position / 1000) == Math.floor(videoOutput.duration / 1000) - 5) {
+        if (videoOutput.duration > 0 && Math.floor(videoOutput.position / 1000) == Math.floor(videoOutput.duration / 1000) - 5) {
             fadeOutVideo.running = true
             fadeOutOsd.running = true
         }
-        if (videoOutput.status == MediaPlayer.EndOfMedia) 
+        if (videoOutput.status == MediaPlayer.EndOfMedia)
             playRandomVideo()
-        if (videoOutput.status === 1) 
+        if (videoOutput.status === 1)
             var status = 'NoMedia'
         else if (videoOutput.status === 2) {
             var status = 'Loading'
@@ -269,9 +316,9 @@ WebOSWindow {
                 playRandomVideo()
             }
         }
-        else if (videoOutput.status === 3) 
+        else if (videoOutput.status === 3)
             var status = 'Loaded'
-        else if (videoOutput.status === 4) 
+        else if (videoOutput.status === 4)
             var status = 'Buffering'
         else if (videoOutput.status === 5) {
             var status = 'Stalled'
@@ -281,20 +328,20 @@ WebOSWindow {
                 playRandomVideo()
             }
         }
-        else if (videoOutput.status === 6) 
+        else if (videoOutput.status === 6)
             var status = 'Buffered'
-         else if (videoOutput.status === 7) 
+         else if (videoOutput.status === 7)
             var status = 'EndOfMedia'
-         else if (videoOutput.status === 8) 
+         else if (videoOutput.status === 8)
             var status = 'InvalidMedia'
-         else if (videoOutput.status === 0) 
+         else if (videoOutput.status === 0)
             var status = 'UnknownStatus'
-        
-        if (videoOutput.playbackState === 1) 
+
+        if (videoOutput.playbackState === 1)
             var playbackState = 'playing'
-         else if (videoOutput.playbackState === 2) 
+         else if (videoOutput.playbackState === 2)
             var playbackState = 'paused'
-         else if (videoOutput.playbackState === 0){ 
+         else if (videoOutput.playbackState === 0){
             var playbackState = 'stopped'
             stalledCounter ++
             if (stalledCounter > 15) {
@@ -317,6 +364,8 @@ WebOSWindow {
         videoOutput.bufferProgress * 33.334).toFixed(0) + "%"
     }
     function updateOSD() {
+        if (!settings || !poi || !playList)
+            return
         var DateFmt = ilib.require("DateFmt.js")
         var now = new Date()
         var time = new DateFmt({
@@ -333,20 +382,21 @@ WebOSWindow {
             length: "full"
         })
         timeOSD.text = time.format(now)
-        if (poi.date) 
+        if (poi.date)
             dateOSD.text = poi.date.daysOfWeek[now.getDay()
             ] + ", " + now.getDate() + " " + poi.date.months[now.getMonth()
             ]
-         else 
+         else
             dateOSD.text = day.format(now)
-        
-        if (playList.assets[randomIndex].pointsOfInterest[Math.floor(videoOutput.position / 1000)]) 
-            poiIndex = Math.floor(videoOutput.position / 1000)        
+
+        if (playList.assets[randomIndex].pointsOfInterest[Math.floor(videoOutput.position / 1000)])
+            poiIndex = Math.floor(videoOutput.position / 1000)
     }
 
     Service {
         id : notificationsService
-        appId : globalVars.appId
+        // globalVars is unavailable on some webOS 4.x qml-runner contexts
+        appId : "com.webos.app.screensaver"
         function set(param) {
             call("luna://com.webos.notification/", param)
         }
@@ -358,7 +408,8 @@ WebOSWindow {
                 if (xhr.status === 200) {
                     var jsonData = JSON.parse(xhr.responseText)
                     eval(targetVar + " = jsonData")
-                    callback()
+                    if (typeof callback === "function")
+                        callback()
                 } else {
                     console.error("Error loading JSON data:", xhr.statusText)
                     name.text = xhr.statusText

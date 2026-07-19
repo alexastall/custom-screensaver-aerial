@@ -14,6 +14,7 @@
 * Source type selection (FullHD/4k SDR or Dolby Vision)
 * Requires root and Homebrew channel
 * Compatible with webOS 5 (2020), webOS 6 (2021), webOS 22 (2022), webOS 23 (2023)
+* **Experimental webOS 4.x** support (see below)
 
 Disclaimer
 ---------------
@@ -24,12 +25,42 @@ Features
 
 * Autostart registration
 * Temporary apply
-* Launch screensaver immediately for testing
+* Launch screensaver immediately for testing (applies QML first, then launches)
 
 Installation
 ------------
 This should be downloadable in Homebrew Channel. Otherwise, there's an `ipk` in
 GitHub releases to the right. You are on your own here.
+
+### webOS 4.x notes (experimental)
+
+Tested on LG 65UM7400PLB (webOS 4.10, ~1.5 GB RAM). Upstream targets webOS 5+.
+
+Recommended settings on webOS 4:
+
+1. Source video type: **FullHD (H264)** (default in this fork from 1.0.13)
+2. Enable **Autostart** (or Temporary Apply after each reboot)
+3. Use **Test run (apply + launch)** to verify
+
+Why Test failed on older builds before 1.0.13:
+
+* Test only called `turnOnScreenSaver` and did **not** apply the aerial QML first
+* Some webOS builds need an explicit `applicationManager/launch` of `com.webos.app.screensaver`
+* QML race: playback started before playlist JSON finished loading
+* `globalVars` is missing in some screensaver qml-runner contexts
+
+4K / Dolby Vision / high-bitrate HEVC streams may fail or stall on low-RAM webOS 4 sets. Prefer H.264 FullHD, and keep “fall back to lower quality” enabled.
+
+Build
+-----
+
+```bash
+npm install
+npm run build
+npm run package   # produces org.aabytt.webos.custom-screensaver-aerial_*_all.ipk
+```
+
+Install the IPK via Homebrew Channel (Dev Mode / root install).
 
 Donate
 ------------
