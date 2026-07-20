@@ -152,13 +152,21 @@ module.exports = kind({
 	
   // Apply bind-mount, leave Live TV (it NACKs system screensaver and shows LG
   // stock photo screensaver from inputcommon instead), go Home, then system path.
-  // Never applicationManager/launch screensaver as a card (breaks power/media).
+  // Fallback: launch com.webos.app.screensaver (native_qml / screenSaver type —
+  // not a CARD window; QML still uses _WEBOS_WINDOW_TYPE_SCREENSAVER).
   testRun: function (command) {
     var cmd = applyPath +
-      " && luna-send -n 1 'luna://com.webos.applicationManager/launch' '{\"id\":\"com.webos.app.home\"}'" +
+      " && luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"com.webos.app.screensaver\"}'" +
+      " ; luna-send -n 1 'luna://com.webos.applicationManager/launch' '{\"id\":\"com.webos.app.home\"}'" +
       " ; luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"com.webos.app.livetv\"}'" +
-      " ; sleep 1" +
-      " ; luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'";
+      " ; luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"com.webos.app.hdmi1\"}'" +
+      " ; luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"com.webos.app.hdmi2\"}'" +
+      " ; luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"com.webos.app.hdmi3\"}'" +
+      " ; luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"com.webos.app.hdmi4\"}'" +
+      " ; sleep 2" +
+      " ; luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'" +
+      " ; sleep 2" +
+      " ; luna-send -n 1 'luna://com.webos.applicationManager/launch' '{\"id\":\"com.webos.app.screensaver\"}'";
     this.exec(cmd);
   },
 

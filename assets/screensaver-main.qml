@@ -12,7 +12,8 @@
  *    idle lifecycle work. CARD type can leave the TV with a stuck media
  *    pipeline (power button dead, app launches crash until reboot).
  *  - PunchThrough is often a no-op (setWindowPunchThroughRectFunc missing).
- *    Use transparent window + Video opacity 0 so the HW plane can show.
+ *    On webOS 4 we paint Video at opacity 1 (QML-composited) so frames show
+ *    without relying on the hardware plane punch-through path.
  *  - Active HDMI (e.g. Roku) can own the video plane — leave that input when testing.
  */
 import QtQuick 2.4
@@ -29,8 +30,8 @@ WebOSWindow {
     width : 1920
     height : 1080
     windowType : "_WEBOS_WINDOW_TYPE_SCREENSAVER"
-    // Transparent when punch-through is broken (webOS 4)
-    color : "transparent"
+    // Black base; video is drawn in QML (opacity 1) on webOS 4
+    color : "black"
     appId : "com.webos.app.screensaver"
     visible : true
     property var poi
@@ -41,6 +42,8 @@ WebOSWindow {
     property int stalledCounter : 0
     property string sourceAlt
     property bool resourcesReady : false
+    // webOS 4: composite Video into the window. webOS 5+ can use opacity 0 + PunchThrough.
+    property bool paintVideoInQml : true
     property string basePath : "file:///media/developer/apps/usr/palm/applications/org.aabytt.webos.custom-screensaver-aerial/assets/"
 
     Component.onCompleted : {
@@ -78,7 +81,7 @@ WebOSWindow {
         }
     }
 
-    // Best-effort on webOS 5+; often no-op on webOS 4
+    // Best-effort on webOS 5+; often no-op on webOS 4 — hide when painting in QML
     PunchThrough {
         id : punchThroughArea
         x : 0
@@ -86,19 +89,20 @@ WebOSWindow {
         z : -1
         width : parent.width
         height : parent.height - 1
-        visible : true
+        visible : !paintVideoInQml
     }
 
     Video {
         id : videoOutput
-        // HW-plane output: do not paint an opaque QML frame over it
+        // webOS 4: opacity 1 so frames composite into the screensaver window.
+        // (opacity 0 only works when HW punch-through is active.)
         fillMode : VideoOutput.PreserveAspectCrop
         width : parent.width
         height : parent.height - 1 // non-fullscreen so system does not auto-kill screensaver
         x : 0
         y : 0
         z : 0
-        opacity : 0
+        opacity : paintVideoInQml ? 1 : 0
         source : ""
         visible : true
         autoPlay : true
@@ -114,6 +118,7 @@ WebOSWindow {
         onPlaying : {
             fadeInOsd.running = true
             osd.visible = true
+            stalledCounter = 0
         }
     }
 

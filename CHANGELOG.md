@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **webOS 4 black Test screen**: paint `Video` at opacity 1 into the screensaver
+  window (PunchThrough/HW plane is a no-op on many 4.x sets). Keep
+  `_WEBOS_WINDOW_TYPE_SCREENSAVER` for power/idle.
+- **Test run**: close existing screensaver + HDMI inputs, then
+  `turnOnScreenSaver` with `applicationManager/launch` fallback.
+
+### Changed
+- Default source remains FullHD H.264 on this fork for webOS 4 RAM/codec limits.
+
 ## [1.0.16] - 2026-07-19
 
 ### Fixed
