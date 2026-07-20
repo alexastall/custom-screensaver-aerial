@@ -1,8 +1,8 @@
 {
   "localeLang": "en-GB",
   "localeLangIndex": 8,
-  "sourceType": "url-1080-H264",
-  "sourceTypeIndex": 0,
+  "sourceType": "url-4K-HDR",
+  "sourceTypeIndex": 4,
   "osdOpacity": 60,
   "debug": true,
   "playLowerQuality": true
