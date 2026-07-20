@@ -1,3 +1,6 @@
 node_modules
 .enyocache
 dist
+
+# local A/B test clips (do not ship)
+assets/test-local.mp4

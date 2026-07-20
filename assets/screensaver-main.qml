@@ -4,15 +4,22 @@
  * Usage:
  *   mount --bind ./screensaver-main.qml /usr/palm/applications/com.webos.app.screensaver/qml/main.qml
  *
- * Test launch:
+ * Test launch (prefer system path — do not applicationManager/launch as a card):
  *   luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'
  *
- * Display notes:
- *  - MUST use _WEBOS_WINDOW_TYPE_SCREENSAVER (CARD can stick power/media).
- *  - LG umedia renders to a HW plane; PunchThrough must be a child of Video
- *    (upstream layout) so the plane is visible through a hole in the window.
- *  - Leave Live TV / active HDMI when testing — they can own the plane.
- *  - webOS 4.x: wait for settings/playlist/locale before playRandomVideo.
+ * Display notes (webOS 4.x / 65UM7400PLB):
+ *  - libItems PunchThrough exists but logs "setWindowPunchThroughRectFunc is not
+ *    defined" — the compositor never registers the hook, so PunchThrough is a no-op.
+ *  - umedia (libqtmultimedia_umedia.so) always renders to a HW video plane, not
+ *    into the QML framebuffer. Video { opacity: 1 } does not paint pixels.
+ *  - Mitigation when punch-through is broken: transparent WebOSWindow + Video at
+ *    opacity 0 so the plane can show under the UI layer. No black fade overlay.
+ *  - Launch ONLY via tvpower turnOnScreenSaver (not applicationManager/launch).
+ *    App-launch leaves Home chrome visible through the transparent window and
+ *    can stick remote input until qml-runner is killed.
+ *  - Keep _WEBOS_WINDOW_TYPE_SCREENSAVER for power/idle. Avoid CARD.
+ *  - Close Netflix / AirPlay / Live TV / HDMI before testing; they steal the plane.
+ *  - settings.forceLocalTest plays assets/test-local.mp4 via file:// (A/B codec/net).
  */
 import QtQuick 2.4
 import QtMultimedia 5.6
@@ -28,7 +35,10 @@ WebOSWindow {
     width : 1920
     height : 1080
     windowType : "_WEBOS_WINDOW_TYPE_SCREENSAVER"
-    color : "black"
+    // Transparent so HW plane can show when punch-through is a no-op.
+    // Home chrome must be hidden by system screensaver mode (turnOnScreenSaver),
+    // not by painting opaque black (that covers the video plane on webOS 4).
+    color : "transparent"
     appId : "com.webos.app.screensaver"
     visible : true
     property var poi
@@ -39,11 +49,19 @@ WebOSWindow {
     property int stalledCounter : 0
     property string sourceAlt
     property bool resourcesReady : false
+    property string activeSource : ""
+    property string punchNote : "init"
     property string basePath : "file:///media/developer/apps/usr/palm/applications/org.aabytt.webos.custom-screensaver-aerial/assets/"
+    property string localTestUrl : basePath + "test-local.mp4"
 
     Component.onCompleted : {
         init()
         notificationsService.set('disable')
+        Qt.callLater(function () {
+            applyPunchThrough()
+            // WebOSWindow has no focus property; use keyCatcher Item
+            keyCatcher.forceActiveFocus()
+        })
     }
 
     Component.onDestruction : {
@@ -52,6 +70,22 @@ WebOSWindow {
             videoOutput.source = ""
         } catch (e) {}
         notificationsService.set('enable')
+    }
+
+    // Key sink (WebOSWindow itself cannot take focus on this platform)
+    Item {
+        id : keyCatcher
+        anchors.fill : parent
+        focus : true
+        Keys.onPressed : {
+            try {
+                videoOutput.stop()
+                videoOutput.source = ""
+            } catch (e) {}
+            notificationsService.set('enable')
+            dismissService.dismiss()
+            event.accepted = true
+        }
     }
 
     I.ILib {
@@ -75,67 +109,64 @@ WebOSWindow {
         }
     }
 
-    // Upstream layout: Video + PunchThrough child + black fade over the hole.
-    // umedia outputs to the HW plane; opacity on Video does not paint frames.
+    // Best-effort; on this webOS 4 Lite build the platform never sets
+    // setWindowPunchThroughRectFunc, so this is typically a no-op.
+    PunchThrough {
+        id : punchThroughArea
+        x : 0
+        y : 0
+        z : -1
+        width : parent.width
+        height : parent.height
+        visible : true
+        Component.onCompleted : {
+            applyPunchThrough()
+        }
+        onWidthChanged : applyPunchThrough()
+        onHeightChanged : applyPunchThrough()
+    }
+
     Video {
         id : videoOutput
+        // HW-plane output: do not paint an opaque QML frame over it
         fillMode : VideoOutput.PreserveAspectCrop
+        // Full window — short height left home dock visible under transparent UI
         width : parent.width
-        height : parent.height - 1 // non-fullscreen so system does not auto-kill screensaver
+        height : parent.height
+        x : 0
+        y : 0
+        z : 0
+        opacity : 0
         source : ""
         visible : true
         autoPlay : true
         onStopped : {
-            punchThroughArea.visible = false
             osd.visible = false
-            fadeOutVideo.running = false
         }
         onPaused : {
-            punchThroughArea.visible = false
-            if (resourcesReady)
-                playRandomVideo()
+            // Do not auto-advance on pause — remote/system pause must dismiss cleanly
             osd.visible = false
-            fadeOutVideo.running = false
         }
         onPlaying : {
-            punchThroughArea.visible = true
-            fadeInVideo.running = true
+            applyPunchThrough()
             fadeInOsd.running = true
             osd.visible = true
             stalledCounter = 0
+            keyCatcher.forceActiveFocus()
         }
-        PunchThrough {
-            id : punchThroughArea
-            visible : false
-            x : 0
-            y : 0
-            z : -1
-            width : parent.width
-            height : parent.height
-            Rectangle {
-                id : opacityBox
-                width : 1920
-                height : 1080
-                z : 1
-                color : "black"
-                OpacityAnimator {
-                    id : fadeInVideo
-                    target : opacityBox
-                    from : 1
-                    to : 0
-                    duration : 3000
-                    running : false
-                }
-                OpacityAnimator {
-                    id : fadeOutVideo
-                    target : opacityBox
-                    from : 0
-                    to : 1
-                    duration : 5000
-                    running : false
-                }
-            }
-        }
+    }
+
+    // Marker that QML graphics plane is alive (green bar top-left)
+    Rectangle {
+        id : planeMarker
+        z : 4
+        width : 48
+        height : 12
+        x : 24
+        y : 24
+        color : "#00ff66"
+        opacity : 0.9
+        visible : settings && settings.debug
     }
 
     Rectangle {
@@ -232,6 +263,21 @@ WebOSWindow {
         styleColor : "black"
         fontSizeMode : name.fontSizeMode
     }
+
+    function applyPunchThrough() {
+        try {
+            if (typeof punchThroughArea.setRegion === "function") {
+                punchThroughArea.setRegion(Qt.rect(0, 0, punchThroughArea.width, punchThroughArea.height))
+                punchNote = "setRegion ok " + Math.floor(punchThroughArea.width) + "x" + Math.floor(punchThroughArea.height)
+            } else {
+                punchNote = "no setRegion"
+            }
+            punchThroughArea.visible = true
+        } catch (e) {
+            punchNote = "setRegion err: " + e
+        }
+    }
+
     function init() {
         loadJSONData(basePath + 'settings.json', 'settings', loadResources)
     }
@@ -244,6 +290,10 @@ WebOSWindow {
         })
     }
     function pickSource(asset) {
+        if (settings && settings.forceLocalTest) {
+            sourceAlt = " - LOCAL test-local.mp4"
+            return localTestUrl
+        }
         var preferred = settings.sourceType
         if (asset[preferred]) {
             sourceAlt = ""
@@ -273,6 +323,18 @@ WebOSWindow {
         if (!playList || !playList.assets || !playList.assets.length || !settings)
             return
         stalledCounter = 0
+
+        if (settings.forceLocalTest) {
+            randomIndex = 0
+            notificationsService.set('disable')
+            activeSource = localTestUrl
+            sourceAlt = " - LOCAL test-local.mp4"
+            videoOutput.source = localTestUrl
+            videoOutput.play()
+            applyPunchThrough()
+            return
+        }
+
         var attempts = 0
         var maxAttempts = playList.assets.length + 2
         while (attempts < maxAttempts) {
@@ -284,10 +346,10 @@ WebOSWindow {
             var url = pickSource(asset)
             if (url) {
                 notificationsService.set('disable')
-                punchThroughArea.visible = false
-                opacityBox.opacity = 1
+                activeSource = url
                 videoOutput.source = url
                 videoOutput.play()
+                applyPunchThrough()
                 return
             }
         }
@@ -296,17 +358,19 @@ WebOSWindow {
         randomIndex = Math.floor(Math.random() * playList.assets.length)
         var retryUrl = pickSource(playList.assets[randomIndex])
         if (retryUrl) {
-            punchThroughArea.visible = false
-            opacityBox.opacity = 1
+            activeSource = retryUrl
             videoOutput.source = retryUrl
             videoOutput.play()
+            applyPunchThrough()
         }
     }
 
     function checkError() {
         if (videoOutput.error !== 0) {
             notificationsService.set('enable')
-            punchThroughArea.visible = false
+            // Do not tight-loop local test on error
+            if (settings && settings.forceLocalTest)
+                return
             playRandomVideo()
         }
     }
@@ -316,21 +380,27 @@ WebOSWindow {
             return
         if (videoOutput.position > 2000) {
             notificationsService.set('enable')
-            playList.assets[randomIndex].viewed = true
+            if (!settings.forceLocalTest)
+                playList.assets[randomIndex].viewed = true
         }
         if (videoOutput.duration > 0 && Math.floor(videoOutput.position / 1000) == Math.floor(videoOutput.duration / 1000) - 5) {
-            fadeOutVideo.running = true
             fadeOutOsd.running = true
         }
-        if (videoOutput.status == MediaPlayer.EndOfMedia)
-            playRandomVideo()
+        if (videoOutput.status == MediaPlayer.EndOfMedia) {
+            if (settings.forceLocalTest) {
+                // Loop local test clip
+                videoOutput.seek(0)
+                videoOutput.play()
+            } else {
+                playRandomVideo()
+            }
+        }
         if (videoOutput.status === 1)
             var status = 'NoMedia'
         else if (videoOutput.status === 2) {
             var status = 'Loading'
             stalledCounter ++
-            if (stalledCounter > 25) {
-                punchThroughArea.visible = false
+            if (stalledCounter > 25 && !settings.forceLocalTest) {
                 playRandomVideo()
             }
         }
@@ -341,8 +411,7 @@ WebOSWindow {
         else if (videoOutput.status === 5) {
             var status = 'Stalled'
             stalledCounter ++
-            if (stalledCounter > 25) {
-                punchThroughArea.visible = false
+            if (stalledCounter > 25 && !settings.forceLocalTest) {
                 playRandomVideo()
             }
         }
@@ -362,14 +431,21 @@ WebOSWindow {
          else if (videoOutput.playbackState === 0){
             var playbackState = 'stopped'
             stalledCounter ++
-            if (stalledCounter > 15) {
-                punchThroughArea.visible = false
+            if (stalledCounter > 15 && !settings.forceLocalTest) {
                 playRandomVideo()
             }
         }
 
+        var srcShort = activeSource
+        if (srcShort.length > 60)
+            srcShort = srcShort.substring(0, 28) + "..." + srcShort.substring(srcShort.length - 28)
+
         debug.text = "Video " + randomIndex + " of " + playList.assets.length +
         "\n Source Type: " + settings.sourceType + sourceAlt +
+        "\n ForceLocal: " + !!settings.forceLocalTest +
+        "\n Window: " + window.windowType + " color=transparent" +
+        "\n Punch: " + punchThroughArea.visible + " | " + punchNote +
+        "\n Source: " + srcShort +
         "\n Try Other Source: " + settings.playLowerQuality +
         "\n Locale: " + settings.localeLang +
         "\n OSD opacity: " + settings.osdOpacity + "%" +
@@ -379,8 +455,7 @@ WebOSWindow {
         "\n Error: " + videoOutput.error + " " + videoOutput.errorString +
         "\n Playback State: " + playbackState +
         "\n Buffer Progress : " + (
-        videoOutput.bufferProgress * 33.334).toFixed(0) + "%" +
-        "\n PunchThrough: " + punchThroughArea.visible
+        videoOutput.bufferProgress * 33.334).toFixed(0) + "%"
     }
     function updateOSD() {
         if (!settings || !poi || !playList)
@@ -408,7 +483,8 @@ WebOSWindow {
          else
             dateOSD.text = day.format(now)
 
-        if (playList.assets[randomIndex].pointsOfInterest[Math.floor(videoOutput.position / 1000)])
+        if (playList.assets[randomIndex] && playList.assets[randomIndex].pointsOfInterest &&
+            playList.assets[randomIndex].pointsOfInterest[Math.floor(videoOutput.position / 1000)])
             poiIndex = Math.floor(videoOutput.position / 1000)
     }
 
@@ -418,6 +494,16 @@ WebOSWindow {
         appId : "com.webos.app.screensaver"
         function set(param) {
             call("luna://com.webos.notification/", param)
+        }
+    }
+    Service {
+        id : dismissService
+        appId : "com.webos.app.screensaver"
+        function dismiss() {
+            // Best-effort cleanup so remote works after a key press
+            call("luna://com.webos.service.tvpower/power/turnOffScreenSaver", "{}")
+            call("luna://com.webos.applicationManager/closeByAppId",
+                 '{"id":"com.webos.app.screensaver"}')
         }
     }
     function loadJSONData(url, targetVar, callback) {

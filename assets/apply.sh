@@ -2,33 +2,47 @@
 
 set -e -o pipefail
 
-MOUNT_TARGET="/usr/palm/applications/com.webos.app.screensaver/qml/main.qml"
-QML_PATH="$(dirname "$(realpath "$0")")/screensaver-main.qml"
+ASSETS="$(dirname "$(realpath "$0")")"
+AERIAL_QML="$ASSETS/screensaver-main.qml"
+AERIAL_TARGET="/usr/palm/applications/com.webos.app.screensaver/qml/main.qml"
 
-if [[ ! -f "$MOUNT_TARGET" ]]; then
-    echo "[-] Target file does not exist: $MOUNT_TARGET" >&2
-    exit 1
-fi
+# Suppress Live TV / HDMI stock "Not Programmed" / no-signal photo screensaver
+# which otherwise overrides the system aerial screensaver.
+INPUT_CREATOR_QML="$ASSETS/inputcommon-ScreensaverCreator.qml"
+INPUT_CREATOR_TARGET="/usr/palm/applications/com.webos.app.inputcommon/qml/InvisibleComponent/ScreensaverCreator.qml"
 
-if [[ ! -f "$QML_PATH" ]]; then
-    echo "[-] Aerial QML missing: $QML_PATH" >&2
-    exit 1
-fi
+bind_file() {
+    local src="$1"
+    local dst="$2"
+    local label="$3"
 
-# If something else (e.g. older custom-screensaver) is bound, rebind to aerial
-if findmnt "$MOUNT_TARGET" >/dev/null 2>&1; then
-    CURRENT="$(findmnt -n -o SOURCE --target "$MOUNT_TARGET" 2>/dev/null || true)"
-    case "$CURRENT" in
-        *custom-screensaver-aerial*)
-            echo "[~] Aerial already enabled" >&2
-            exit 0
-            ;;
-        *)
-            echo "[*] Replacing existing bind: $CURRENT" >&2
-            umount "$MOUNT_TARGET" || true
-            ;;
-    esac
-fi
+    if [[ ! -f "$src" ]]; then
+        echo "[-] Missing $label source: $src" >&2
+        return 1
+    fi
+    if [[ ! -f "$dst" ]]; then
+        echo "[-] Missing $label target: $dst" >&2
+        return 1
+    fi
 
-mount --bind "$QML_PATH" "$MOUNT_TARGET"
-echo "[+] Aerial screensaver enabled" >&2
+    if findmnt "$dst" >/dev/null 2>&1; then
+        CURRENT="$(findmnt -n -o SOURCE --target "$dst" 2>/dev/null || true)"
+        # Always remount: in-place file replaces leave a //deleted bind.
+        echo "[*] Rebinding $label (was: $CURRENT)" >&2
+        umount "$dst" || true
+    fi
+
+    mount --bind "$src" "$dst"
+    echo "[+] $label enabled" >&2
+}
+
+bind_file "$AERIAL_QML" "$AERIAL_TARGET" "Aerial QML"
+bind_file "$INPUT_CREATOR_QML" "$INPUT_CREATOR_TARGET" "inputcommon ScreensaverCreator"
+
+# Prefer Home as last input so idle/power paths do not open Live TV first.
+# Best-effort; ignore failures on older settingsservice builds.
+luna-send -n 1 -f luna://com.webos.settingsservice/setSystemSettings \
+  '{"category":"general","settings":{"lastInputApp":"com.webos.app.home","physicalLastInputApp":"com.webos.app.home"}}' \
+  >/dev/null 2>&1 || true
+
+echo "[+] Aerial apply complete" >&2

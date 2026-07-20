@@ -6,13 +6,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.17] - 2026-07-20
+
 ### Fixed
-- **Black Test screen (regression)**: restore upstream layout — `PunchThrough`
-  as a **child of `Video`** with black fade overlay. LG `umedia` draws to a HW
-  plane; painting Video at opacity 1 does not show frames. Keep
-  `_WEBOS_WINDOW_TYPE_SCREENSAVER` and webOS 4 load-order / `globalVars` guards.
-- **Test run**: close existing screensaver + HDMI inputs, then
-  `turnOnScreenSaver` with `applicationManager/launch` fallback.
+- **Live TV "Not Programmed" → Aerial**: bind-mount a patched
+  `ScreensaverCreator` over `com.webos.app.inputcommon` so no-signal /
+  Not Programmed / similar states start the system Aerial screensaver instead
+  of LG stock photos. Stock photo UI is never created. Wired into `apply.sh`.
+- **apply.sh**: always remount binds (avoids stale `//deleted` after file replace).
+- **Test run**: leave Live TV/HDMI, go Home, only `turnOnScreenSaver` (no
+  `applicationManager/launch` of screensaver — that left Home chrome visible
+  and could stick the remote).
+- **webOS 4 plane path**: transparent window + Video opacity 0; full-window
+  plane; key-dismiss via child Item (WebOSWindow has no `focus` property —
+  assigning it crashed qml-runner immediately).
+- **Default source FullHD H.264** on this fork: 4K HDR fails demux on K5LP
+  webOS 4 Lite (`uMediaClient error 204`, `supportDolbyHDRContents: false`).
+- Optional `forceLocalTest` / `test-local.mp4` for offline A/B (not shipped).
+
+### Tested
+- LG **65UM7400PLB**, webOS TV **4.10.0** (K5LP), rooted.
 
 ## [1.0.16] - 2026-07-19
 

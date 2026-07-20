@@ -150,10 +150,9 @@ module.exports = kind({
     this.$.playLowerQuality.set('checked', settings.playLowerQuality);	  
   },
 	
-  // Apply bind-mount, leave Live TV (it NACKs system screensaver and shows LG
-  // stock photo screensaver from inputcommon instead), go Home, then system path.
-  // Fallback: launch com.webos.app.screensaver (native_qml / screenSaver type —
-  // not a CARD window; QML still uses _WEBOS_WINDOW_TYPE_SCREENSAVER).
+  // Apply bind-mounts, leave Live TV/HDMI, go Home, then ONLY system
+  // turnOnScreenSaver. Do NOT applicationManager/launch the screensaver — that
+  // leaves Home icons visible through the transparent window and can stick remote.
   testRun: function (command) {
     var cmd = applyPath +
       " && luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"com.webos.app.screensaver\"}'" +
@@ -163,10 +162,12 @@ module.exports = kind({
       " ; luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"com.webos.app.hdmi2\"}'" +
       " ; luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"com.webos.app.hdmi3\"}'" +
       " ; luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"com.webos.app.hdmi4\"}'" +
-      " ; sleep 2" +
-      " ; luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'" +
-      " ; sleep 2" +
-      " ; luna-send -n 1 'luna://com.webos.applicationManager/launch' '{\"id\":\"com.webos.app.screensaver\"}'";
+      " ; luna-send -n 1 'luna://com.webos.settingsservice/setSystemSettings' '{\"category\":\"general\",\"settings\":{\"lastInputApp\":\"com.webos.app.home\",\"physicalLastInputApp\":\"com.webos.app.home\"}}'" +
+      " ; sleep 3" +
+      " ; luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"com.webos.app.livetv\"}'" +
+      " ; luna-send -n 1 'luna://com.webos.applicationManager/closeByAppId' '{\"id\":\"org.aabytt.webos.custom-screensaver-aerial\"}'" +
+      " ; sleep 1" +
+      " ; luna-send -n 1 'luna://com.webos.service.tvpower/power/turnOnScreenSaver' '{}'";
     this.exec(cmd);
   },
 

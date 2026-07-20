@@ -64,6 +64,13 @@ From 1.0.16 Test only uses the system `turnOnScreenSaver` path. Also turn off
 **demo mode** if enabled (Settings / store-demo), and ensure **Autostart** is on
 so the bind survives reboot.
 
+**Live TV "Not Programmed" / no-signal:** this fork replaces that stock inputcommon
+photo UI with Aerial by bind-mounting a patched `ScreensaverCreator` (see
+`assets/inputcommon-ScreensaverCreator.qml`). After **Apply** / Autostart, switch
+to Live TV on an unused channel or unplug HDMI — Aerial should start instead of
+LG photos. Restart Live TV once if the patch was just applied (inputcommon loads
+QML at process start).
+
 **Stock LG photo/particle screensaver still appears:** LG has *two* systems:
 
 1. **Aerial (this app)** — `com.webos.app.screensaver`, bind-mounted QML. Used when
